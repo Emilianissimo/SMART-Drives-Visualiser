@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <format>
 #include <algorithm>
 
 
@@ -96,9 +95,11 @@ vector<map<string, string>> SMARTReader::LoadSmartData()
                 remainingLifeTimePercent = maximumLifeTimePercent - actualDevicePercentDecrease;
             }
             catch (const invalid_argument& e) {
+                remainingLifeTimePercent = maximumLifeTimePercent;
                 continue;
             }
             catch (const out_of_range& e) {
+                remainingLifeTimePercent = maximumLifeTimePercent;
                 continue;
             }
         }
@@ -107,9 +108,11 @@ vector<map<string, string>> SMARTReader::LoadSmartData()
                 remainingLifeTimePercent = maximumLifeTimePercent - stoi(device[SSD_PERCENTAGE_USED]);
             }
             catch (const invalid_argument& e) {
+                remainingLifeTimePercent = maximumLifeTimePercent;
                 continue;
             }
             catch (const out_of_range& e) {
+                remainingLifeTimePercent = maximumLifeTimePercent;
                 continue;
             }
         }
@@ -145,7 +148,7 @@ vector<map<string, string>> SMARTReader::GetDeviceList()
 
     vector<map<string, string>> devices;
 
-    for (int i = 0; i < result.size(); ++i) {
+    for (size_t i = 0; i < result.size(); ++i) {
         vector<string> localResult = Split(result[i], ' ');
         map<string, string> localMap;
         localMap["name"] = localResult[2];
@@ -173,7 +176,7 @@ vector<vector<string>> SMARTReader::ParseLoadedDeviceResultRaw(vector<map<string
 {
     vector<vector<string>> devicesRawResult;
 
-    for (int i = 0; i < devices.size(); i++) {
+    for (size_t i = 0; i < devices.size(); i++) {
         vector<string> result;
         string device_path = devices[i]["path"];
         ostringstream command_stream;
